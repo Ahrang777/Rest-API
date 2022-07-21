@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <meta charset="UTF-8">
+    <title>[[${room.name}]]</title>
+    <script src="/webjars/jquery/jquery.min.js"></script>
+    <script src="/webjars/sockjs-client/sockjs.min.js"></script>
+    <script src="/webjars/stomp-websocket/stomp.min.js"></script>
+</head>
+
+<div class="container">
+    <div class="col-6">
+        <h1>[[${room.name}]]</h1>
+    </div>
+    <div>
+        <div id="msgArea" class="col"></div>
+        <div class="col-6">
+            <div class="input-group mb-3">
+                <input type="text" id="msg" class="form-control">
+                <div class="input-group-append">
+                    <button class="btn btn-outline-secondary" type="button" id="button-send">전송</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="col-6"></div>
+</div>
+
+<script th:inline="javascript">
+            $(document).ready(function(){
+
+                var roomId = [[${room.roomId}]];
+                var roomName = [[${room.name}]];
+                var username = [[${member}]];
+                var sendBtn = $("#button-send");
+
+                console.log(roomName + ", " + roomId + ", " + username);
+
+                var sockJs = new SockJS("/stomp-chat");
+                //1. SockJS를 내부에 들고있는 stomp를 내어줌
+                var client = Stomp.over(sockJs);
+
+                //2. connection이 맺어지면 실행
+                client.connect({}, function (){
+                   console.log("STOMP Connection")
+
+                   //4. subscribe(path, callback)으로 메세지를 받을 수 있음
+                   client.subscribe("/subscribe/chat/room/" + roomId, function (chat) {
+                       var content = JSON.parse(chat.body);
+
+                       var sender = content.sender;
+                       var str = '';
+
+                       if(sender === username){
+                           str = "<div class='col-6'>";
+                           str += "<div class='alert alert-secondary'>";
+                           str += "<b>" + sender + " : " + content.message + "</b>";
+                           str += "</div></div>";
+                       }
+                       else{
+                           str = "<div class='col-6'>";
+                           str += "<div class='alert alert-warning'>";
+                           str += "<b>" + sender + " : " + content.message + "</b>";
+                           str += "</div></div>";
+                       }
+
+                       $("#msgArea").append(str);
+                   });
+
+                   //3. send(path, header, message)로 메세지를 보낼 수 있음
+                   // 입장 메시지
+                   client.send('/publish/chat/join', {}, JSON.stringify({chatRoomId: roomId, sender: username}))
+                });
+
+                //$("#button-send").on("click", function(e){
+
+                sendBtn.click(function () {
+                    var msg = document.getElementById("msg");
+
+                    console.log(username + ":" + msg.value);
+                    client.send('/publish/chat/message', {}, JSON.stringify({chatRoomId: roomId, message: msg.value, sender: username}));
+                    msg.value = '';
+                });
+            });
+        </script>
+
+</html>

@@ -1,0 +1,35 @@
+spring:
+  profiles:
+    include: jwt
+
+  messages:
+    basename: i18n/exception,i18n/validation
+
+  datasource:
+    url: jdbc:h2:tcp://localhost/~/restapi
+    username: sa
+    password:
+    driver-class-name: org.h2.Driver
+
+  jpa:
+    hibernate:
+      ddl-auto: create
+    properties:
+      hibernate:
+        #        show_sql: true 콘솔 출력이라서 쓰지 말자
+        format_sql: true
+        default_batch_fetch_size: 100
+    open-in-view: false
+
+logging:
+  level:
+    org.hibernate.SQL: debug  #이건 로거를 통해서 sql들이 찍힘
+#    org.hibernate.type: trace
+
+springdoc:
+  swagger-ui:
+    enabled: true
+  version: 'v1'
+  default-consumes-media-type: application/json # 기본 consume media type
+  default-produces-media-type: application/json # 기본 produce media type
+  model-and-view-allowed: true # ModelAndView 허용
