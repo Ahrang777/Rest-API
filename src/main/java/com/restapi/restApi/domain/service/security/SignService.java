@@ -5,10 +5,12 @@ import com.restapi.restApi.advice.exception.CEmailSignupFailedException;
 import com.restapi.restApi.advice.exception.CRefreshTokenException;
 import com.restapi.restApi.advice.exception.CUserNotFoundException;
 import com.restapi.restApi.config.security.JwtProvider;
+import com.restapi.restApi.config.security.RoleType;
 import com.restapi.restApi.domain.entity.RefreshToken;
+import com.restapi.restApi.domain.entity.Role;
 import com.restapi.restApi.domain.entity.User;
-import com.restapi.restApi.domain.repository.RefreshTokenJpaRepository;
-import com.restapi.restApi.domain.repository.UserJpaRepository;
+import com.restapi.restApi.domain.repository.RefreshTokenJpaRepo;
+import com.restapi.restApi.domain.repository.UserJpaRepo;
 import com.restapi.restApi.domain.service.dto.TokenDto;
 import com.restapi.restApi.domain.service.dto.UserSignupDto;
 import lombok.RequiredArgsConstructor;
@@ -24,10 +26,10 @@ import org.springframework.transaction.annotation.Transactional;
 @Transactional
 public class SignService {
 
-    private final UserJpaRepository userJpaRepository;
+    private final UserJpaRepo userJpaRepository;
     private final PasswordEncoder passwordEncoder;
     private final JwtProvider jwtProvider;
-    private final RefreshTokenJpaRepository refreshTokenJpaRepository;
+    private final RefreshTokenJpaRepo refreshTokenJpaRepository;
 
     public TokenDto login(String email, String password) {
 
@@ -66,7 +68,25 @@ public class SignService {
         if (userJpaRepository.findByEmail(userSignupDto.getEmail()).isPresent()) {
             throw new CEmailSignupFailedException();
         }
-        return userJpaRepository.save(userSignupDto.toEntity(passwordEncoder)).getId();
+
+        log.info("=======================check1");
+
+//        User user = User.createUser(userSignupDto.getEmail(), passwordEncoder.encode(userSignupDto.getPassword()),
+//                userSignupDto.getName(), userSignupDto.getNickname());
+
+        User user = User.builder().email(userSignupDto.getEmail()).password(passwordEncoder.encode(userSignupDto.getPassword()))
+                .name(userSignupDto.getName()).nickname(userSignupDto.getNickname()).build();
+
+        log.info("=======================check2");
+
+        log.info("role: {}", user.getRoles());
+
+        user.getRoles().add(new Role(RoleType.ROLE_USER));
+        log.info("role = {}", user.getRoles().get(0));
+
+        log.info("=======================check3");
+
+        return userJpaRepository.save(user).getId();
     }
 
     public TokenDto reissue(String accessToken, String refreshToken) {

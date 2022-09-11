@@ -1,6 +1,7 @@
 package com.restapi.restApi.config.security;
 
 import com.restapi.restApi.advice.exception.CAuthenticationEntryPointException;
+import com.restapi.restApi.domain.entity.Role;
 import com.restapi.restApi.domain.service.dto.TokenDto;
 import io.jsonwebtoken.*;
 import io.jsonwebtoken.impl.Base64UrlCodec;
@@ -24,7 +25,7 @@ import java.util.List;
 @RequiredArgsConstructor
 public class JwtProvider {
 
-    @Value("spring.jwt.secret")
+    @Value("${spring.jwt.secret}")
     private String secretKey;
     private final String ROLES = "roles";
     private final Long accessTokenValidMillisecond = 60 * 60 * 1000L; // 1 hour
@@ -38,7 +39,7 @@ public class JwtProvider {
     }
 
     // JWT 생성
-    public TokenDto createTokenDto(Long userPk, List<String> roles) {
+    public TokenDto createTokenDto(Long userPk, List<Role> roles) {
 
         // Claims 에 user 구분을 위한 User pk 및 authorities 목록 삽입
         Claims claims = Jwts.claims().setSubject(String.valueOf(userPk));

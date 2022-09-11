@@ -9,7 +9,6 @@ import javax.persistence.*;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
-import java.util.Set;
 import java.util.stream.Collectors;
 
 @Entity
@@ -21,7 +20,6 @@ public class User extends BaseTimeEntity implements UserDetails {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "user_id")
     private Long id;
 
     @Column(nullable = false, unique = true, length = 30)
@@ -40,18 +38,35 @@ public class User extends BaseTimeEntity implements UserDetails {
     @Column(length = 100)
     private String provider;
 
-    @ElementCollection(fetch = FetchType.EAGER)
+    /*@ElementCollection(fetch = FetchType.EAGER)
     @CollectionTable(
             name = "roles",
             joinColumns = @JoinColumn(name = "user_id"))
     @Builder.Default
-    private List<String> roles = new ArrayList<>();
+    private List<RoleType> roles = new ArrayList<>();*/
+
+    @OneToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL, orphanRemoval = true)
+    @JoinColumn(name = "user_id")
+    @Builder.Default
+    private List<Role> roles = new ArrayList<>();
+
+    public static User createUser(String email, String password, String name, String nickname) {
+        User user = new User();
+        user.email = email;
+        user.name = name;
+        user.password = password;
+        user.nickname = nickname;
+        return user;
+    }
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
-        return this.roles
+
+        return this.roles.stream().map(r -> new SimpleGrantedAuthority(r.getRole().name())).collect(Collectors.toList());
+
+        /*return this.roles
                 .stream().map(SimpleGrantedAuthority::new)
-                .collect(Collectors.toList());
+                .collect(Collectors.toList());*/
     }
 
     @Override

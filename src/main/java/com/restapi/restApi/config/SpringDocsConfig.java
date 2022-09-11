@@ -9,7 +9,7 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
 // Swagger3: http://localhost:8080/swagger-ui/index.html
-@Configuration
+/*@Configuration
 public class SpringDocsConfig {
 
     @Bean
@@ -26,7 +26,7 @@ public class SpringDocsConfig {
                 .info(info);
     }
 
-    /*@Bean
+    *//*@Bean
     public Docket api() {
         return new Docket(DocumentationType.OAS_30)
                 .useDefaultResponseMessages(false)
@@ -43,5 +43,5 @@ public class SpringDocsConfig {
                 .description("웹 서버 API 설명을 위한 문서입니다.")
                 .version("1.0")
                 .build();
-    }*/
-}
+    }*//*
+}*/

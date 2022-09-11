@@ -3,7 +3,6 @@ package com.restapi.restApi.api.controller;
 import com.restapi.restApi.api.controller.dto.user.UserResponseDto;
 import com.restapi.restApi.api.controller.dto.response.Response;
 import com.restapi.restApi.domain.entity.User;
-import com.restapi.restApi.domain.repository.UserJpaRepository;
 import com.restapi.restApi.domain.service.UserService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;

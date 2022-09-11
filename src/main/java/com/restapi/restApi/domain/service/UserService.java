@@ -1,7 +1,7 @@
 package com.restapi.restApi.domain.service;
 
 import com.restapi.restApi.domain.entity.User;
-import com.restapi.restApi.domain.repository.UserJpaRepository;
+import com.restapi.restApi.domain.repository.UserJpaRepo;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -13,7 +13,7 @@ import java.util.List;
 @Transactional(readOnly = true)
 public class UserService {
 
-    private final UserJpaRepository userJpaRepository;
+    private final UserJpaRepo userJpaRepository;
 
     /*@Transactional
     public Long save()*/

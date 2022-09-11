@@ -8,7 +8,7 @@ import java.util.List;
 import java.util.Optional;
 
 @Repository
-public interface UserJpaRepository extends JpaRepository<User, Long> {
+public interface UserJpaRepo extends JpaRepository<User, Long> {
 
     List<User> findByName(String name);
 

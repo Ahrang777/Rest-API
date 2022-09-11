@@ -25,8 +25,9 @@ public class ExceptionAdvice {
     @ExceptionHandler(Exception.class)
     @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
     protected Response defaultException(Exception e) {
-//        log.error("[exceptionHandler] ex", e);
-        log.error("Exception");
+        log.error("[exceptionHandler] ex", e);
+//        log.error("Exception");
+//        e.getStackTrace();
         return getFailureResponse(EXCEPTION);
     }
 

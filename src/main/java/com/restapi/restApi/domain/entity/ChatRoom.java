@@ -1,15 +1,14 @@
 package com.restapi.restApi.domain.entity;
 
-import lombok.AccessLevel;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.NonNull;
+import lombok.*;
 
 import javax.persistence.*;
 
 @Getter
-@Entity
+//@Entity
+@Builder
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
+@AllArgsConstructor
 public class ChatRoom {
 
     /*@Id
@@ -23,8 +22,15 @@ public class ChatRoom {
     public static ChatRoom create(@NonNull String name) {
         ChatRoom created = new ChatRoom();
 //        created.id = UUID.randomUUID().toString();
-//        created.roomId = name;  // Long id 로?
+        created.roomId = name;  // Long id 로?
         created.name = name;
         return created;
     }
+
+//    @Id
+//    @GeneratedValue(strategy = GenerationType.IDENTITY)
+//    @Column(name = "chatroom_id")
+//    private Long id;
+//
+//    private String title;
 }

@@ -36,7 +36,13 @@ out/
 ### VS Code ###
 .vscode/
 
-### Security, OAuth ###
-application-jwt.yml
-application-oauth.yml
-application-private.yml
+
+### Rest Docs ###
+**/static/docs/**
+
+### yml file ###
+*.yml
+
+.gitmessage.txt
+
+**.log
